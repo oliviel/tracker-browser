@@ -10,7 +10,8 @@ function App() {
   }, [])
 
   useBeforeunload(event => {
-     fetch('http://k96eg.mocklab.io', {
+    // http://k96eg.mocklab.io
+     fetch('https://tracker-d4fd7.firebaseio.com/track.json', {
     method: 'POST',
     body: JSON.stringify({
       ...state,
@@ -23,10 +24,6 @@ function App() {
   .then(response => response.json())
   .then(json => console.log(json))
   });
-
- 
-
-  console.log(state);
 
   return (
     <div className="App">
