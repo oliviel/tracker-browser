@@ -1,24 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { useBeforeunload } from 'react-beforeunload';
+import { browserMetaData, currentTime } from './utils';
 
 function App() {
+  const [state, setState] = useState({});
+
+  useEffect(() => {
+    setState({ ...browserMetaData(), startSession: currentTime() });
+  }, [])
+
+  useBeforeunload(event => {
+     fetch('http://k96eg.mocklab.io', {
+    method: 'POST',
+    body: JSON.stringify({
+      ...state,
+      endSession: currentTime(),
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  })
+  .then(response => response.json())
+  .then(json => console.log(json))
+  });
+
+ 
+
+  console.log(state);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     {JSON.stringify(state, null)}
+     <p>djd</p>
     </div>
   );
 }
